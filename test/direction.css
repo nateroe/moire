@@ -1,0 +1,69 @@
+/* Wave Direction Control CSS */
+
+/* Direction control container */
+.direction-control-container {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin: 0;
+}
+
+/* Canvas for direction control */
+.direction-canvas {
+	width: 30px;
+	height: 30px;
+	border: 1px solid #444;
+	border-radius: 50%;
+	cursor: pointer;
+	background-color: #222;
+    margin: 0 5px 0 0;	
+}
+
+
+/* Input group styling */
+.direction-input-group {
+	display: flex;
+	align-items: center;
+	gap: 5px;
+}
+
+/* Wave control rows for better organization */
+.wave-control-row {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 15px;
+	margin: 8px 0;
+	width: 100%;
+}
+
+/* Style for phase slider container */
+.phase-control {
+	flex: 1;
+	min-width: 200px;
+	display: flex;
+	align-items: center;
+}
+
+/* Make the phase slider take more space */
+.phase-control .wavePhase {
+	flex: 1;
+	min-width: 120px;
+}
+
+/* Ensure compatible layout with responsive design */
+@media (max-width: 768px) {
+	.wave-control-row {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 10px;
+	}
+	
+	.direction-control-container {
+		width: 100%;
+	}
+	
+	.phase-control {
+		width: 100%;
+	}
+}

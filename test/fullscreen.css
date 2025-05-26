@@ -1,0 +1,73 @@
+/* Fullscreen button styles */
+#fullscreenButton {
+	position: absolute;
+	bottom: 10px;
+	right: 10px;
+	width: 32px;
+	height: 32px;
+	background-color: rgba(0, 0, 0, 0.5);
+	color: #fff;
+	border: 1px solid #555;
+	border-radius: 4px;
+	cursor: pointer;
+	font-size: 18px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	opacity: 0;
+	transition: opacity 0.3s ease;
+	z-index: 100;
+}
+
+#fullscreenButton:hover {
+	background-color: rgba(0, 0, 0, 0.7);
+}
+
+/* Canvas container styles */
+#canvasContainer {
+	position: relative;
+	display: inline-block;
+	margin: 0 auto;
+}
+
+#canvasContainer:hover #fullscreenButton {
+	opacity: 1;
+}
+
+/* Fullscreen mode styles */
+#canvasContainer:fullscreen,
+#canvasContainer:-webkit-full-screen,
+#canvasContainer:-moz-full-screen,
+#canvasContainer:-ms-fullscreen {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100vw;
+	height: 100vh;
+	background-color: #000;
+	margin: 0;
+	padding: 0;
+	overflow: hidden; /* Prevent scrollbars in fullscreen */
+}
+
+#canvasContainer:fullscreen #moireCanvas,
+#canvasContainer:-webkit-full-screen #moireCanvas,
+#canvasContainer:-moz-full-screen #moireCanvas,
+#canvasContainer:-ms-fullscreen #moireCanvas {
+	/* Canvas size controlled by JS for higher resolution rendering */
+	display: block;
+	margin: auto;
+	/* No fixed size - actual canvas dimensions set by JS */
+}
+
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+	#fullscreenButton {
+		width: 28px;
+		height: 28px;
+		font-size: 16px;
+		bottom: 6px;
+		right: 6px;
+	}
+}

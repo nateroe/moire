@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moiré Exploré Gallery</title>
+    <!-- DEPENDENCIES_PLACEHOLDER -->
+</head>
+<body>
+    <h1>Moiré Pattern Gallery</h1>
+    <p class="subtitle">Explore generative geometric patterns with wave perturbations</p>
+    
+    <div class="navigation-bar">
+        <a href="index.html">Editor</a>
+        <a href="favorites.html">Favorites</a>
+    </div>
+    
+    <div class="global-controls">
+        <button id="playAllButton">Play All</button>
+        <button id="stopAllButton">Stop All</button>
+    </div>
+    
+    <div class="gallery" id="gallery"></div>
+
+    <!-- PATTERNS_DATA_PLACEHOLDER -->
+    <!-- BASE_URL_PLACEHOLDER -->
+    <script>
+		// Pattern data structure above is nested - need to flatten it for easy access
+		let flatPatterns = [];
+		patterns.forEach(group => {
+			flatPatterns = flatPatterns.concat(group.patterns);
+		});
+
+		// Store references
+		const renderers = [];
+		const animationStates = [];
+		let viewportManager = null;
+		let visibilityManager = null;
+
+		// Create gallery items in DOM - updated to handle grouped structure
+		function createGalleryItems() {
+			const gallery = document.getElementById('gallery');
+			
+			patterns.forEach(group => {
+				// Create group heading
+				const groupHeader = document.createElement('h2');
+				groupHeader.textContent = group.groupTitle;
+				groupHeader.style.gridColumn = '1 / -1'; // Span full width
+				groupHeader.style.marginTop = '30px';
+				groupHeader.style.marginBottom = '15px';
+				gallery.appendChild(groupHeader);
+				
+				// Create items for patterns in this group
+				group.patterns.forEach((pattern, patternIndex) => {
+					const globalIndex = flatPatterns.indexOf(pattern);
+					
+					const item = document.createElement('div');
+					item.className = 'gallery-item';
+					item.innerHTML = `
+						<div class="pattern-container">
+							<canvas id="canvas-${globalIndex}"></canvas>
+						</div>
+						<div class="info">
+							<h3>${pattern.title}</h3>
+							<p>${pattern.description}</p>
+							<div class="metadata">
+								<button class="play-btn" data-index="${globalIndex}">Play</button>
+								<button class="edit-btn" data-state="${pattern.state}">Open in Editor</button>
+							</div>
+						</div>
+					`;
+					gallery.appendChild(item);
+					
+					// Add double-click handler to the canvas
+					const canvas = item.querySelector(`#canvas-${globalIndex}`);
+					canvas.addEventListener('dblclick', () => {
+						openInEditor(pattern.state);
+					});
+				});
+			});
+		}
+
+
+		// Initialize patterns with ViewportSwitchingManager - updated to use flat patterns
+		function initializePatterns() {
+			// Create single ViewportSwitchingManager and VisibilityManager to manage all
+			viewportManager = new ViewportSwitchingManager();
+			visibilityManager = new VisibilityManager({ isPauseOnScroll: true });
+			
+			flatPatterns.forEach((pattern, index) => {
+				const canvas = document.getElementById(`canvas-${index}`);
+				if (!canvas) return;
+				
+				// Set canvas dimensions
+				canvas.width = 400;
+				canvas.height = 225;
+				
+				// Register with ViewportSwitchingManager
+				viewportManager.registerCanvas(`canvas-${index}`, canvas.width, canvas.height);
+				
+				// Create renderer
+				const renderer = new MoireRenderer(canvas, null, false, viewportManager);
+				renderer.webGLManager = viewportManager;
+				renderer.setPresentationMode(true); // Enable presentation mode for gallery
+
+				// Register for tab visibility (all renderers)
+				visibilityManager.registerRenderer(renderer);
+				
+				// Register for scroll visibility (per canvas)
+				visibilityManager.registerScrollElement(canvas, renderer);
+				
+				// Load state but don't render yet
+				if (pattern.state) {
+					renderer.loadFromState(pattern.state, false); // false = don't render
+					// Override active keyframe to k1
+					renderer.settings.activeKeyframe = 'k1';
+					renderer.pausedT = 0; // Start at k1
+				}
+				
+				// Only render if visible
+				const rect = canvas.getBoundingClientRect();
+				const isVisible = (
+					rect.bottom >= 0 &&
+					rect.top <= window.innerHeight &&
+					rect.right >= 0 &&
+					rect.left <= window.innerWidth
+				);
+				
+				if (isVisible) {
+					renderer.render();
+				}
+				
+				// Store renderer
+				renderers[index] = renderer;
+				animationStates[index] = false;
+			});
+		}        
+		
+		function openInEditor(state) {
+			// Assuming the editor is at index.html - adjust path as needed
+			const editorUrl = `${baseUrl}index.html?state=${state}`;
+			window.open(editorUrl, '_blank');
+		}
+
+        // Animation controls
+		function startAnimation(index) {
+			const startTime = performance.now();
+			console.log(`[canvas-${index}] startAnimation: Starting...`);
+			
+			if (renderers[index]) {
+				const preStartTime = performance.now();
+				renderers[index].startAnimation();
+				const postStartTime = performance.now();
+				
+				console.log(`[canvas-${index}] startAnimation: renderer.startAnimation() took ${(postStartTime - preStartTime).toFixed(1)}ms`);
+				
+				animationStates[index] = true;
+				
+				const btn = document.querySelector(`.play-btn[data-index="${index}"]`);
+				btn.textContent = 'Stop';
+				btn.classList.add('playing');
+				
+				const totalTime = performance.now() - startTime;
+				console.log(`[canvas-${index}] startAnimation: Total time ${totalTime.toFixed(1)}ms`);
+			}
+		}        
+
+        function stopAnimation(index) {
+            if (renderers[index]) {
+                renderers[index].pause();
+                animationStates[index] = false;
+                const btn = document.querySelector(`.play-btn[data-index="${index}"]`);
+                btn.textContent = 'Play';
+                btn.classList.remove('playing');
+            }
+        }
+        
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            createGalleryItems();
+            initializePatterns();
+			
+            // Individual play buttons
+            document.querySelectorAll('.play-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const index = parseInt(e.target.dataset.index);
+                    if (animationStates[index]) {
+                        stopAnimation(index);
+                    } else {
+                        startAnimation(index);
+                    }
+                });
+            });
+            
+			// Edit buttons
+			document.querySelectorAll('.edit-btn').forEach(btn => {
+				btn.addEventListener('click', (e) => {
+					const state = e.target.dataset.state;
+					openInEditor(state);
+				});
+			});
+			
+            // Global controls
+			document.getElementById('playAllButton').addEventListener('click', () => {
+				console.log('Play All: Starting all animations...');
+				visibilityManager.startAllAnimations();
+			});
+
+			document.getElementById('stopAllButton').addEventListener('click', () => {
+				visibilityManager.stopAllAnimations();
+			});
+		});
+    </script>
+</body>
+</html>

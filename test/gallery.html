@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moiré Exploré Gallery</title>
+    <link rel="stylesheet" href="gallery.css">
+</head>
+<body>
+    <h1>Moiré Pattern Gallery</h1>
+    <p class="subtitle">Explore generative geometric patterns with wave perturbations</p>
+    
+    <div class="navigation-bar">
+        <a href="index.html">Editor</a>
+        <a href="favorites.html">Favorites</a>
+    </div>
+    
+    <div class="global-controls">
+        <button id="playAllButton">Play All</button>
+        <button id="stopAllButton">Stop All</button>
+    </div>
+    
+    <div class="gallery" id="gallery"></div>
+    
+    <!-- Load all required scripts -->
+    <script src="moire-utils.js"></script>
+    <script src="visibility.js"></script>
+    <script src="names.js"></script>
+    <script src="state-encoder.js"></script>
+    <script src="shader-source.js"></script>
+    <script src="viewport-switching-manager.js"></script>
+    <script src="moire-renderer.js"></script>
+    
+    <script>
+        // Pattern data - copied from gallery.html
+        const patterns = [
+			{
+				groupTitle: "Showcase",
+				patterns: [
+					{
+						title: "Lava Lamp",
+						description: "Smooth, bulbous waves drift and collide, evoking the hypnotic flow of molten blobs suspended in liquid. The moiré undulates organically, as if lit from within.",
+						state: "AgQPAQEAGQACAQIBAAAAAAAAyAAAAWgAGABkAGQAZAAAjKAAAAAAAAAH0AAACgRkAJcAl_8AAFoAlwCX_wAAGQCXAJf_AAAZAJcAl_-mAA8CAn0IeQAAAN4bnxufAwEnAQIAAAErDFra8QABfQlSAAABE-0I3doAACALygAAAWfokB9AAwEUAd8AAACB5GEbnwAEmwTwAAAAENqWCzkABh4HPQAAALncTg_dAgGjDMQAAAFiF3DgwAEEZQbJAAABT_wdJt4AAPoFTAAAAIclags5AQVSEv0AAADEEvjd2gEJZAB3AAAAEBuf5GEBA8wOIwAAATDwI9xOAwDIA-gAAAAA7unc4AMAyAPoAAAAANtc8nYCAAAAAAAAyAAAAWgAGABkAGQAZP__c2AAAAAAAAAH0AAACgRkAJcAl_8AAFoAlwCX_wAAGQCXAJf_AAAZAJcAl_-mAA8CAn0IeQAAAN4bnxufAwEnAQIAAAErDFra8QABfQlSAAABE-0I3doAACALygAAAWfokB9AAwEUAd8AAACB5GEbnwAEmwTwAAAAENqWCzkABh4HPQAAALncTg_dAgGjDMQAAAFiF3DgwAEEZQbJAAABT_wdJt4AAPoFTAAAAIclags5AQVSEv0AAADEEvjd2gEJZAB3AAAAEBuf5GEBA8wOIwAAATDwI9xOAwDIA-gAAAAA7unc4AMAyAPoAAAAANtc8nYC"
+					},
+					{
+						title: "High Density Moiré",
+						description: "A tightly packed lattice of lines and curves creates an overwhelming shimmer. The pattern pulses with optical tension, producing intricate interference zones that seem to vibrate on the edge of visibility.",
+						state: "AQUKAAEADIACAQIBAAAAAAABaABkABMAZABkjKAAyAAKBRkUFP8AABkUFP-_ABkUFOz_ABkUFJP_ABkUFACwsAoBAaYS6AEAkT4DAXUSuABAhiQCAysMBQBOeNgDAGIOyACZwm8AAy0OZQAuwpEDAogGQgAuwpEDAlkHYQBOfwAAAx4McQBXiNgABF4CWQEo834DBDIJ0QDATJoCAAAAAAAAAABkABMAZABkc2AAyAAKBRkUFP8AABkUFP-_ABkUFOz_ABkUFJP_ABkUFACwsAoBAaYS6AEAkT4DAXUSuABAhiQCAysMBQBOeNgDAGIOyACZwm8AAy0OZQAuwpEDAogGQgAuwpEDAlkHYQBOfwAAAx4McQBXiNgABF4CWQEo834DBDIJ0QDATJoC"
+					},
+					{
+						title: "1990s Shopping Mall Arcade",
+						description: "Neon-inspired wallpaper flashes and ripple with CRTs reflecting through cigarette haze.",
+						state: "AgUIAAEADUgCAQIBAAAAAAAAAP___0MAQAA7AGQAZP__c2AAAAAAAAAD6AAACgUtAGQAZP-mAB8AZABkef8AGQBkAGSA_wAZAGQAZAD_QBkAZABkAP__CAIDKQpLAAAAEycQAAACAhwPggAAARfmPOKkAAQXC4MAAAEKEvjd2gAAmgROAAAAte3U3WwBBNEJKwAAAO0HqSZOAQJhBhUAAAFQ4MAXcAMFBwF2AAABaPOm2vEDAi8AnP____IfF-haAgAAAAAAAAD___9DAEAAOwBkAGQAAIygAAAAAAAAA-gAAAoFLQBkAGT_pgAfAGQAZHn_ABkAZABkgP8AGQBkAGQA_0AZAGQAZAD__wgCAykKSwAAABMnEAAAAgIcD4IAAAEX5jzipAAEFwuDAAABChL43doAAJoETgAAALXt1N1sAQTRCSsAAADtB6kmTgECYQYVAAABUODAF3ADBQcBdv___pjzptrxAwIvAJz____yHxfoWgI"
+					},
+					{
+						title: "Chromatic Drift",
+						description: "A seamless moiré flow where colors glide across the screen in layered currents. Some regions accelerate while others lag behind, creating a dynamic tension between velocity and hue.",
+						state: "BAULAQAADID_AQIBAAAAAAAAAP___pgAAAAAAGQAZABkAGT__3NgAAAAAAAAAMgAAAoFDAAUABT_AAAIABQAFP-_AAYAFAAUgP8ABAAUABQA_0AEABQAFAD__wsABJMFyAAAAV7___-bAASQESwAAACX____0wIDuAoeAAAAiP___4EAAq8IMwAAAUgAAAA9AQSxCxcAAAD1AAAAnAABKQL5AAAAev___6wAAFsPbgAAAQL___9pAQIIC5oAAABUAAAAdwACGwMJAAAAbP___10BBB4ErgAAART____1AgLWCNoAAAA5AAAAqQIAAAAAAAAAAAABaAAAAAAAZABkAGQAZAAAjKAAAAAAAAAAyAAACgUMABQAFP8AAAgAFAAU_78ABgAUABSA_wAEABQAFAD_QAQAFAAUAP__CwAEkwXIAAABXv___5sABJARLAAAAJf____TAgO4Ch4AAACI____gQACrwgzAAABSAAAAD0BBLELFwAAAPUAAACcAAEpAvkAAAB6____rAAAWw9uAAABAv___2kBAggLmgAAAFQAAAB3AAIbAwkAAABs____XQEEHgSuAAABFP____UCAtYI2gAAADkAAACpAg"
+					},
+					{
+						title: "Pressure Wave Interference",
+						description: "Constructive and destructive interference zones animate in real time, like a visual experiment in wave physics.",
+						state: "BAICAAEAAlj_AQIBAAAAAAAAAAAAAKcAAAAAAGQAMgBkAGQAAAAAAAAAAAAAAAAAAAoCZAAUABT_AAAvABQAFP-AAAIBD6AH0AAAAAAAAAAAAQ-gCJgAAAAAAAAAWwIAAAAAAAAAAAAAegAAAAAAZAANAGQAZAAAAAAAAAAAAAAAAAAACgJkABQAFP8AAC8AFAAU_4AAAgEPoAfQAAAAAAAAAAABD6AHCAAAAAAAAABbAQ"
+					},
+					{
+						title: "Difference Blobs",
+						description: "Overlapping organic shapes ripple and collide in vibrant colors, revealing contrast-rich intersections through difference blending in a dynamic, fluid motion.",
+						state: "BAIPAQIABLD_AQIB____AAAAAAAAAWj_2f_CAE0AZABkAGT__3NgAAAAAAAAAfQAAAoCZADIAMj_AABkAMgAyP9VAA8DAQgCkQAAAWgAAAAvAwFHAxgAAAAAAAABDQADSwsPAAAAAAAAASgAAKIHNgAAAWgAAACdAQCACowAAAAAAAAAqAEFCQEB___-mAAAAOQBAgYAswAAAWgAAABvAQOnBp8AAAFoAAAApAYARgNlAAABaAAAAGsGA-ED3QAAAAAAAADSBgL8A5QAAAAAAAAAsAYBnwIv___-mAAAAS0HAMYAiAAAAAAAAAAJBwCpA2YAAAAAAAAAKgcBCAQ_AAAAAAAAATQC____AAAAAAAAAWj_2f_CAE0AZABkAGT__3NgAAAAAAAAAfQAAAoCZADIAMj_AABkAMgAyP9VAA8DAQgCkQAAAAAAAAAvAwFHAxgAAAFoAAABDQADSwsPAAABaAAAASgAAKIHNgAAAAAAAACdAQCACowAAAFoAAAAqAEFCQEBAAAAAAAAAOQBAgYAswAAAAAAAABvAQOnBp8AAAAAAAAApAYARgNl___-mAAAAGsGA-ED3QAAAWgAAADSBgL8A5T___6YAAAAsAYBnwIvAAABaAAAAS0HAMYAiAAAAWgAAAAJBwCpA2b___6YAAAAKgcBCAQ_AAABaAAAATQB"
+					}
+				]
+			},
+			{
+				groupTitle: "Basic Examples",
+				patterns: [
+					{
+						title: "Rotation Offset",
+						description: "This is the basic effect of rotating overlapping grids. Default settings.",
+						state: "BAIAAQAAB9D_AQIBAAAAAAAAAAAAAAAAAAAAAGQAZABkAGQAAAAAAAAAAAAAAAAAAAoCGQAUABT_AAAZABQAFP-_AAACAAAAAACMoAAAAAAAAAAAAGQAZABkAGQAAAAAAAAAAAAAAAAAAAoCGQAUABT_AAAZABQAFP-_AAAC"
+					},
+					{
+						title: "Thickness",
+						description: "Animate the size of the grid dots.",
+						state: "BAEAAQAAADL_AQIBAAAAAACMoAAAAAAAAAAAAAEAZABkAGQAAAAAAAAAAAAAAAAAAAoBZAAUABT_AAAAAgAAAAAAjKAAAAAAAAAAAABkAGQAZABkAAAAAAAAAAAAAAAAAAAKAWQAFAAU_wAAAAI"
+					},
+					{
+						title: "Scale",
+						description: "Animate grid spacing.",
+						state: "BAEAAQAAADL_AQIBAAAAAACMoAAAAAAAAAAAAGQABABkAGQAAAAAAAAAAAAAAAAAAAoBRwGQAZD_AAAAAgAAAAAAjKAAAAAAAAAAAABkAGQAZABkAAAAAAAAAAAAAAAAAAAKAUcBkAGQ_wAAAAE"
+					},
+					{
+						title: "Hue",
+						description: "Cycle through hue in multiples of 360 degrees to create seamless color animation.",
+						state: "BAEAAQAAACj_AQIBAAAAAACMoP___pgAAAAAAGQAZABkAGQAAAAAAAAAAAAAAAAAAAoBNAAUABT_AAAAAgAAAAAAjKAAAAFoAAAAAABkAGQAZABkAAAAAAAAAAAAAAAAAAAKATQAFAAU_wAAAAI"
+					}
+				]
+			},
+			{
+				groupTitle: "Perturbing with Waves",
+				patterns: [
+					{
+						title: "Transverse",
+						description: "Transverse waves cause distortions in a direction perpendicular to wave direction.",
+						state: "BAEBAAAAACj_AQIBAAAAAACMoAAAAWgAAAAAAGQAZABkAGQAAAAAAAAAAAAAAAAAAAoBNAAUABS_v78BAAPoA-gAAAAAAAAAAAIAAAAAAIygAAABaAAAAAAAZABkAGQAZAAAjKAAAAAAAAAAAAAACgE0ABQAFL-_vwEAA-gD6AAAAAAAAAAAAg"
+					},
+					{
+						title: "Longitude",
+						description: "Longitudinal waves cause distortions in a direction parallel to wave direction.",
+						state: "BAEBAAAAACj_AQIBAAAAAACMoAAAAWgAAAAAAGQAZABkAGQAAAAAAAAAAAAAAAAAAAoBNAAUABS_v78BAQu4BdwAAAAAAAAAAAIAAAAAAIygAAABaAAAAAAAZABkAGQAZAAAjKAAAAAAAAAAAAAACgE0ABQAFL-_vwEBC7gF3AAAAAAAAAAAAQ"
+					},
+					{
+						title: "Amplitude",
+						description: "Amplitude waves cause distortions in the perception of the size of the grid's dots.",
+						state: "BAEBAAAAACgAAQIBAAAAAACMoAAAAWgAAAAAAGQAZABkAGQAAAAAAAAAAAAAAAAAAAoBNAAUABS_v78BAgDIBdwAAAAAAAABLgIAAAAAAIygAAABaAAAAAAAZABkAGQAZAAAjKAAAAAAAAAAAAAACgE0ABQAFL-_vwECAMgF3AAAAAAAAAEuAg"
+					},
+					{
+						title: "Hue",
+						description: "Hue waves cause distortions in the perception of dots' colors, altering by some hue angle.",
+						state: "BAEBAAAAACgAAQIBAAAAAACMoAAAAWgAAAAAAGQAZABkAGQAAAAAAAAAAAAAAAAAAAoBNAAUABT_AAABAwOEAu4AAAAAAAAAQgIAAAAAAIygAAABaAAAAAAAZABkAGQAZAAAjKAAAAAAAAAAAAAACgE0ABQAFP8AAAEDA4QC7gAAAAAAAABCAg"
+					},
+					{
+						title: "Saturation",
+						description: "Saturation waves cause distortions in the saturation of the grid's dots. Desaturated dots are grey.",
+						state: "BAEBAAAAACgAAQIBAAAAAACMoAAAAWj_2AAAAGQAZABkAGQAAAAAAAAAAAAAAAAAAAoBNAAUABT_AAABBAH0BdwAAAAAAAAAAAIAAAAAAIygAAABaP_YAAAAZABkAGQAZAAAjKAAAAAAAAAAAAAACgE0ABQAFP8AAAEEAfQF3AAAAAAAAAAAAg"
+					},
+					{
+						title: "Lightness",
+						description: "Amplitude waves cause distortions in the lightness the grid's dots. Also creates darkness.",
+						state: "BAEBAAAAACgAAQIBAAAAAACMoAAAAWj_2P_PAGQAZABkAGQAAAAAAAAAAAAAAAAAAAoBNAAUABT_AAABBQH0BdwAAAAAAAAAAAIAAAAAAIygAAABaP_Y_88AZABkAGQAZAAAjKAAAAAAAAAAAAAACgE0ABQAFP8AAAEFAfQF3AAAAAAAAAAAAQ"
+					},
+					{
+						title: "Rotation",
+						description: "These waves affect the rotation offset of each grid.",
+						state: "BAUBAAAAAGQAAQIBAAAAAAAAAAAAAAAAAAAAAGQAZABkAGQAAIygAAAAAAAAAAAAAAoFGQAoACj_AAAZACgAKP-_ABkAKAAogP8AGQAoACgA_0AZACgAKAD__wEGAB4D6AAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAABkAGQAZABkAAAAAAAAAAAAAAAAAAAKBRkAKAAo_wAAGQAoACj_vwAZACgAKID_ABkAKAAoAP9AGQAoACgA__8BBgAeA-gAAAAAAAAAAAI"
+					},
+					{
+						title: "Phase",
+						description: "Phase waves are computed first, and the sum of the phase waves at a specific point is added to the phase offset for each grid. Thus unlike other wave types, phase waves have no direct effect on their own -- they perturb the phase of the other waves.",
+						state: "BAUIAAAAAlgAAQIBAAAAAAAAAAAAAAAAAAAAAGQAZABkAGQAAAAAAAAAAAAAAAAAAAoFGQAoACj_AAAZACgAKP-_ABkAKAAogP8AGQAoACgA_0AZACgAKAD__wgAAKMHVgAAAS8AAAFnAQB1EcAAAACCAAAAEgIAwRMxAAAAVgAAAR0DAO8DdwAAAKYAAACfBADMAaoAAAAuAAAArAUAsQTJAAAAJQAAADMGAAoFpwAAAMsAAAFOBwXcAj3___6YAAAA1gIAAAAAAAAAAAAAAAAAAAAAZABkAGQAZAAAAAAAAAAAAAAAAAAACgUZACgAKP8AABkAKAAo_78AGQAoACiA_wAZACgAKAD_QBkAKAAoAP__CAAAowdWAAABLwAAAWcBAHURwAAAAIIAAAASAgDBEzEAAABWAAABHQMA7wN3AAAApgAAAJ8EAMwBqgAAAC4AAACsBQCxBMkAAAAlAAAAMwYACgWnAAAAywAAAU4HBdwCPQAAAWgAAADWAg"
+					}
+				]
+			},
+			{
+				groupTitle: "Grid Lines",
+				patterns: [
+					{
+						title: "Rectangular Grid Lines",
+						description: "It's gone plaid!",
+						state: "BQgEAAQBAADIAAECAQAAAAAAAAAAAAAAAAAAAAABAAEAZABkAAAAAAAAAAAAAAAAAAAKCGQAyADI_wAAWADIAMj_vwBPAMgAyID_AEUAyADIAP9AGQDIAMgA__8ZAMgAyABA_xkAyADIgAD_GQDIAMj_AL8EBgAKALUAAABJAAAA1AcABguhAAABaAAAAS8HAEEGYAAAAMQAAAFlBwBDBI0AAAAAAAAAEwIAAAAAAAAAAAABaAAAAAAAAQABAGQAZAAAjKAAAAAAAAAAAAAACghkAMgAyP8AAFgAyADI_78ATwDIAMiA_wBFAMgAyAD_QBkAyADIAP__GQDIAMgAQP8ZAMgAyIAA_xkAyADI_wC_BAYACgC1AAAASQAAANQHAAYLoQAAAWgAAAEvBwBBBmAAAADEAAABZQcAQwSNAAAAAAAAABMB"
+					},
+					{
+						title: "Hexagonal Grid Lines",
+						description: "Twistronics visualizer",
+						state: "BQgEAQQBAADIAAECAQAAAAAAAAAAAAAAAAAAAAAQAAgAZABkAAAAAAAAAAAAAAAAAAAKCGQAyADI_wAAWADIAMj_vwBPAMgAyID_AEUAyADIAP9AGQDIAMgA__8ZAMgAyABA_xkAyADIgAD_GQDIAMj_AL8EBgAKALUAAABJAAAA1AcABguhAAABaAAAAS8HAEEGYAAAAMQAAAFlBwBDBI0AAAAAAAAAEwIAAAAAAAAAAAABaAAAAAAAEAAIAGQAZAAAjKAAAAAAAAAAAAAACghkAMgAyP8AAFgAyADI_78ATwDIAMiA_wBFAMgAyAD_QBkAyADIAP__GQDIAMgAQP8ZAMgAyIAA_xkAyADI_wC_BAYACgC1AAAASQAAANQHAAYLoQAAAWgAAAEvBwBBBmAAAADEAAABZQcAQwSNAAAAAAAAABMC"
+					},
+					{
+						title: "Wavy Grid Lines",
+						description: "Phase modulation is the best!",
+						state: "BggHAAQBAADIAAECAQAAAAAAAAAAAAFoAAAARAA6AGQAZABkAAAAAAAAAAAAAAAAAAAKCABkAMgAyP8AAABYAMgAyP-_AABPAMgAyID_AABFAMgAyAD_QAA7AMgAyAD__wA0AMgAyABA_wErAMgAyAB2fgEjAMgAyLt3AQcBBgAKALUAAAAAAAAA1AEHAAYLoQAAAWgAAAEvAQcAQQZgAAAAAAAAAWUBBwOrDnUAAAFoAAAA6wEHA3MCuv___pgAAABXAQcCFwjxAAAAAAAAAO0BBwROBub___6YAAAAugIAAAAAAAAAAAABaAAAAEQAOgBkAGQAZAAAjKAAAAAAAAAAAAAACggAZADIAMj_AAAAWADIAMj_vwAATwDIAMiA_wAARQDIAMgA_0AAOwDIAMgA__8ANADIAMgAQP8BKwDIAMgAdn4BIwDIAMi7dwEHAQYACgC1AAABaAAAANQBBwAGC6EAAAAAAAABLwEHAEEGYP___pgAAAFlAQcDqw51AAAAAAAAAOsBBwNzAroAAAAAAAAAVwEHAhcI8QAAAWgAAADtAQcETgbmAAAAAAAAALoC"
+					},
+					{
+						title: "Hexagonal Aberration",
+						description: "Phase modulation of the rotation wave creates chromatic aberration.",
+						state: "BggHAQABAAJYAAACAQAAAAAAAAAAAAFoAAAARAABAGQAZABkAAAAAAAAAAAAAADIAAAKCAFkAMgAyP8AAAFkAMgAyP-_AAFkAMgAyID_AAFkAMgAyAD_QAFkAMgAyAD__wFkAMgAyABA_wFkAMgAyAB2fgFkAMgAyLt3AQcBBgAKALUAAAAAAAABVAEHAM4LoQAAAWgAAAALAQcBCQZgAAAAAAAAACABBwDvDnUAAAAAAAABDgEHARsCugAAAWgAAABiAQcA6wjx___-mAAAAGYBBwDKBuYAAAAAAAAAJQIAAAAAAAAAAAABaAAAAEQAAQBkAGQAZAAAjKAAAAAAAAAAyAAACggBZADIAMj_AAABZADIAMj_vwABZADIAMiA_wABZADIAMgA_0ABZADIAMgA__8BZADIAMgAQP8BZADIAMgAdn4BZADIAMi7dwEHAQYACgC1AAABaAAAAVQBBwDOC6EAAAAAAAAACwEHAQkGYAAAAWgAAAAgAQcA7w51AAABaAAAAQ4BBwEbAroAAAAAAAAAYgEHAOsI8QAAAWgAAABmAQcAygbmAAABaAAAACUB"
+					},
+					{
+						title: "Hex Web",
+						description: "Overlapping organic shapes ripple and collide in vibrant colors, revealing contrast-rich intersections through difference blending in a dynamic, fluid motion.",
+						state: "BggPAQEBABBo_wACAQAAAAAAAAAAAAC-__f_6gALABMAZABk__9zYAAAAAAAAAAAAAAKCAFkAMgAyAB0pgAZAMgAyAD_QAAZAMgAyAD__wAZAMgAyABA_wAZAMgAyIAA_wAZAMgAyP8AvwFkAMgAyP-qAAFkAMgAyP8AAA8BAwEIApEAAAFoAAAALwEDAUcDGAAAAAAAAAENAQADSwsPAAAAAAAAASgBAACiBzYAAAFoAAAAnQEBAIAKjAAAAAAAAACoAQEBIQTp___-mAAAAOQBAQIGBJsAAAFoAAAAbwEBAhcGnwAAAWgAAACkAQYARgNlAAABaAAAAGsBBgDBA90AAAAAAAAA0gEGAKQDlAAAAAAAAACwAQYAcwIv___-mAAAAS0BBwAKBHAAAAAAAAAACQEHAAoLNgAAAAAAAAAqAQcACggnAAAAAAAAATQCAAAAAAAAAAAAAL7_9__qAAsAEwBkAGQAAIygAAAAAAAAAAAAAAoIAWQAyADIU6YAABkAyADIAP9AABkAyADIAP__ABkAyADIAED_ABkAyADIgAD_ABkAyADI_wC_AWQAyADI_5FZAWQAyADI_1lZDwEDAQgCkf___pgAAAAvAQMBRwMYAAABaAAAAQ0BAANLCw8AAAFoAAABKAEAAKIHNgAAAAAAAACdAQEAgAqM___-mAAAAKgBAQEhBOkAAAAAAAAA5AEBAgYEmwAAAAAAAABvAQECFwaf___-mAAAAKQBBgBGA2UAAAAAAAAAawEGAMED3QAAAWgAAADSAQYApAOU___-mAAAALABBgBzAi8AAAAAAAABLQEHAAoEcAAAAWgAAAAJAQcACgs2___-mAAAACoBBwAKCCcAAAFoAAABNAI"
+					}
+				]
+			}
+		];
+               
+		// Pattern data structure is now nested - need to flatten it for easy access
+		let flatPatterns = [];
+		patterns.forEach(group => {
+			flatPatterns = flatPatterns.concat(group.patterns);
+		});
+
+		// Store references
+		const renderers = [];
+		const animationStates = [];
+		let viewportManager = null;
+		let visibilityManager = null;
+
+		// Create gallery items in DOM - updated to handle grouped structure
+		function createGalleryItems() {
+			const gallery = document.getElementById('gallery');
+			
+			patterns.forEach(group => {
+				// Create group heading
+				const groupHeader = document.createElement('h2');
+				groupHeader.textContent = group.groupTitle;
+				groupHeader.style.gridColumn = '1 / -1'; // Span full width
+				groupHeader.style.marginTop = '30px';
+				groupHeader.style.marginBottom = '15px';
+				gallery.appendChild(groupHeader);
+				
+				// Create items for patterns in this group
+				group.patterns.forEach((pattern, patternIndex) => {
+					const globalIndex = flatPatterns.indexOf(pattern);
+					
+					const item = document.createElement('div');
+					item.className = 'gallery-item';
+					item.innerHTML = `
+						<div class="pattern-container">
+							<canvas id="canvas-${globalIndex}"></canvas>
+						</div>
+						<div class="info">
+							<h3>${pattern.title}</h3>
+							<p>${pattern.description}</p>
+							<div class="metadata">
+								<button class="play-btn" data-index="${globalIndex}">Play</button>
+								<button class="edit-btn" data-state="${pattern.state}">Open in Editor</button>
+							</div>
+						</div>
+					`;
+					gallery.appendChild(item);
+					
+					// Add double-click handler to the canvas
+					const canvas = item.querySelector(`#canvas-${globalIndex}`);
+					canvas.addEventListener('dblclick', () => {
+						openInEditor(pattern.state);
+					});
+				});
+			});
+		}
+
+
+		// Initialize patterns with ViewportSwitchingManager - updated to use flat patterns
+		function initializePatterns() {
+			// Create single ViewportSwitchingManager and VisibilityManager to manage all
+			viewportManager = new ViewportSwitchingManager();
+			visibilityManager = new VisibilityManager({ isPauseOnScroll: true });
+			
+			flatPatterns.forEach((pattern, index) => {
+				const canvas = document.getElementById(`canvas-${index}`);
+				if (!canvas) return;
+				
+				// Set canvas dimensions
+				canvas.width = 400;
+				canvas.height = 225;
+				
+				// Register with ViewportSwitchingManager
+				viewportManager.registerCanvas(`canvas-${index}`, canvas.width, canvas.height);
+				
+				// Create renderer
+				const renderer = new MoireRenderer(canvas, null, false, viewportManager);
+				renderer.webGLManager = viewportManager;
+				renderer.setPresentationMode(true); // Enable presentation mode for gallery
+
+				// Register for tab visibility (all renderers)
+				visibilityManager.registerRenderer(renderer);
+				
+				// Register for scroll visibility (per canvas)
+				visibilityManager.registerScrollElement(canvas, renderer);
+				
+				// Load state but don't render yet
+				if (pattern.state) {
+					renderer.loadFromState(pattern.state, false); // false = don't render
+					// Override active keyframe to k1
+					renderer.settings.activeKeyframe = 'k1';
+					renderer.pausedT = 0; // Start at k1
+				}
+				
+				// Only render if visible
+				const rect = canvas.getBoundingClientRect();
+				const isVisible = (
+					rect.bottom >= 0 &&
+					rect.top <= window.innerHeight &&
+					rect.right >= 0 &&
+					rect.left <= window.innerWidth
+				);
+				
+				if (isVisible) {
+					renderer.render();
+				}
+				
+				// Store renderer
+				renderers[index] = renderer;
+				animationStates[index] = false;
+			});
+		}        
+		
+		function openInEditor(state) {
+			// Assuming the editor is at index.html - adjust path as needed
+			const editorUrl = `index.html?state=${state}`;
+			window.open(editorUrl, '_blank');
+		}
+
+        // Animation controls
+		function startAnimation(index) {
+			const startTime = performance.now();
+			console.log(`[canvas-${index}] startAnimation: Starting...`);
+			
+			if (renderers[index]) {
+				const preStartTime = performance.now();
+				renderers[index].startAnimation();
+				const postStartTime = performance.now();
+				
+				console.log(`[canvas-${index}] startAnimation: renderer.startAnimation() took ${(postStartTime - preStartTime).toFixed(1)}ms`);
+				
+				animationStates[index] = true;
+				
+				const btn = document.querySelector(`.play-btn[data-index="${index}"]`);
+				btn.textContent = 'Stop';
+				btn.classList.add('playing');
+				
+				const totalTime = performance.now() - startTime;
+				console.log(`[canvas-${index}] startAnimation: Total time ${totalTime.toFixed(1)}ms`);
+			}
+		}        
+
+        function stopAnimation(index) {
+            if (renderers[index]) {
+                renderers[index].pause();
+                animationStates[index] = false;
+                const btn = document.querySelector(`.play-btn[data-index="${index}"]`);
+                btn.textContent = 'Play';
+                btn.classList.remove('playing');
+            }
+        }
+        
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            createGalleryItems();
+            initializePatterns();
+            
+            // Individual play buttons
+            document.querySelectorAll('.play-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const index = parseInt(e.target.dataset.index);
+                    if (animationStates[index]) {
+                        stopAnimation(index);
+                    } else {
+                        startAnimation(index);
+                    }
+                });
+            });
+            
+			// Edit buttons
+			document.querySelectorAll('.edit-btn').forEach(btn => {
+				btn.addEventListener('click', (e) => {
+					const state = e.target.dataset.state;
+					openInEditor(state);
+				});
+			});
+			
+            // Global controls
+			document.getElementById('playAllButton').addEventListener('click', () => {
+				console.log('Play All: Starting all animations...');
+				visibilityManager.startAllAnimations();
+			});
+
+			document.getElementById('stopAllButton').addEventListener('click', () => {
+				visibilityManager.stopAllAnimations();
+			});
+		});
+    </script>
+</body>
+</html>

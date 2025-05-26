@@ -1,0 +1,703 @@
+/* Base styles */
+body {
+	background-color: #0d0d0d;
+	text-align: center;
+	font-family: Arial, sans-serif;
+	color: white;
+}
+
+h3 {
+	color: #eee;
+	margin-bottom: 10px;
+}
+
+
+/* Improved link styles */
+a {
+    color: #4ba3ff;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(75, 163, 255, 0.3);
+    transition: all 0.2s ease;
+    padding: 2px 4px;
+    border-radius: 2px;
+}
+
+a:hover {
+    background-color: rgba(75, 163, 255, 0.1);
+    border-bottom: 1px solid #4ba3ff;
+    color: #fff;
+}
+
+a:active {
+    background-color: rgba(75, 163, 255, 0.2);
+    transform: translateY(1px);
+}
+
+/* Ensure links in lists have proper spacing */
+li a {
+    display: inline-block;
+    margin: 2px 0;
+}
+
+/* Make sure links don't break awkwardly on small screens */
+@media (max-width: 768px) {
+    a {
+        word-break: break-word;
+    }
+}
+
+
+
+
+/* Canvas styling */
+canvas {
+	border: 1px solid #333;
+	display: block;
+	margin: 0 auto;
+}
+
+#moireCanvas { max-width: 100%; height: auto; }
+
+
+/* Common controls styling */
+.controls {
+	margin-top: 10px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	max-width: 95%;
+	margin: 10px auto;
+}
+
+.section {
+	width: 100%;
+	padding: 15px 0;
+	border-top: 1px solid #444;
+}
+
+/* Section internal spacing */
+.section > div {
+	margin-bottom: 15px;
+}
+
+/* Inline controls for better spacing */
+.inline-controls {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 15px;
+	align-items: center;
+	margin-bottom: 10px;
+	justify-content: center;
+}
+
+
+.inline-controls-keyframe {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	margin-top: 20px;
+	margin-bottom: 10px;
+	justify-content: center;
+}
+
+
+/* Special control for rotation slider */
+#rotationOffset,
+#commonHue,
+#commonOffset,
+#phaseOffset {
+	width: 100%;
+	max-width: none;
+}
+
+/* Slider with value layout */
+
+.slider-with-value {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 10px;
+	margin-bottom: 10px;
+	width: 100%;
+	justify-content: center;
+
+}
+
+.slider-with-value label {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+
+.slider-with-value input[type="range"] {
+	flex: 1;
+	min-width: 100px;
+	width: 100%;
+	vertical-align: middle;
+	padding: 5px 5px;
+	min-width: 600px;
+}
+
+.slider-with-value input[type="number"] {
+	width: 70px;
+	margin-left: 5px;
+	padding: 5px 5px;
+}
+
+.slider-with-value span {
+	padding: 0 5px;
+	min-width: 45px; /* Ensure value displays have enough space */
+	text-align: left;
+	vertical-align: middle;
+}
+
+/* Common input styling */
+input[type="number"], 
+input[type="text"] {
+    padding: 3px 5px;
+    border: 1px solid #555;
+    background-color: #333;
+    color: #fff;
+    border-radius: 3px;
+}
+
+/* Size constraints for number inputs */
+input[type="number"] {
+    width: 60px;
+}
+
+
+
+/* Grid and wave controls */
+.grid-controls-container, 
+.wave-controls-container {
+	display: flex;
+	flex-direction: column; /* Force vertical stacking */
+	flex-wrap: nowrap; /* Prevent wrapping */
+	align-items: center; /* Center items horizontally */
+	gap: 10px;
+	width: 100%;
+}
+.controls .wave-controls-container label { margin: 5px; }
+
+.grid-control, .wave-control {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: flex-start;
+	border: 1px solid #555;
+	padding: 5px;
+	margin: 5px;
+	border-radius: 4px;
+	transition: transform 0.2s ease, border-color 0.2s ease, margin 0.2s ease;
+	/* Don't force full width - let them maintain their natural width but be centered */
+	max-width: 95%;
+	box-sizing: border-box;
+}
+
+.grid-control .control-content,
+.wave-control .control-content {
+	width: 100%;
+}
+
+
+.wave-control-buttons { margin: 10px 0; }
+
+/* Add spacing between wave control groups while preserving existing styles */
+.wave-params-group {
+	margin-bottom: 15px;
+}
+
+/* Make sure labels and controls have proper spacing */
+label {
+	margin-right: 10px;
+	white-space: nowrap;
+}
+
+/* Fix for inline form controls */
+input[type="number"], 
+select, 
+input[type="radio"] + label {
+	margin-right: 10px;
+}
+
+/* Grid and wave controls content */
+.grid-control .control-content,
+.wave-control .control-content {
+	display: flex;
+	flex-wrap: wrap;
+	flex: 1;
+	align-items: center;
+	vertical-align: middle;
+    gap: 10px;
+    width: 100%;	
+}
+
+.control-content label {
+	display: inline-flex;
+	align-items: center;
+	margin: 0;
+	gap: 5px;
+}
+
+/* Wave controls specific spacing */
+.wave-controls-container label,
+.grid-controls-container label {
+	vertical-align: middle;
+}
+
+/* Add small margin between controls in wave-control */
+.wave-control label {
+	margin-right: 10px;
+	white-space: nowrap;
+	vertical-align: middle;
+}
+
+/* Drag handle styles */
+.drag-handle {
+	cursor: grab;
+	width: 16px;
+	margin-right: 10px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	color: #666;
+	font-size: 14px;
+	user-select: none;
+	height: 100%;
+}
+
+.drag-handle:hover {
+	color: #999;
+}
+
+.drag-handle::before {
+	content: "⋮⋮";
+	letter-spacing: -4px;
+}
+
+/* Style for the dragging state */
+.dragging {
+	opacity: 0.5;
+	border: 1px dashed #888;
+	background-color: #333;
+}
+
+/* Active keyframe highlighting */
+body.bound-to-k1 .keyframe-selection label:nth-child(1),
+body.bound-to-k2 .keyframe-selection label:nth-child(2) {
+	font-weight: bold;
+	color: #4ba3ff;
+	padding: 5px;
+	bottom: 5px;
+	border: 2px dashed #4ba3ff;
+}
+
+/* Notifications */
+#toast {
+	pointer-events: none;
+	position: fixed;
+	bottom: 20px;
+	left: 50%;
+	transform: translateX(-50%);
+	background-color: #333;
+	padding: 10px 20px;
+	color: #fff;
+	border-radius: 4px;
+	opacity: 0;
+	transition: opacity 0.5s ease;
+	z-index: 1000;
+}
+
+#shareLinkDiv {
+	margin-top: 10px;
+	word-break: break-all;
+	max-width: 90%;
+}
+
+/* Help overlay system */
+.overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.8);
+	z-index: 1000;
+	overflow-y: auto;
+}
+
+.overlay-content {
+	position: relative;
+	background-color: #252525;
+	margin: 5% auto;
+	padding: 20px;
+	width: 80%;
+	max-width: 800px;
+	border-radius: 8px;
+	color: white;
+}
+
+.overlay-content ul, 
+.overlay-content ol {
+	text-align: left;
+	max-width: 80%;
+	margin: 10px auto;
+	padding-left: 20px;
+}
+
+.overlay-content ul ul, 
+.overlay-content ul ol,
+.overlay-content ol ul,
+.overlay-content ol ol {
+	padding-left: 15px;
+	margin: 5px 0;
+}
+
+.overlay-content p {
+	text-align: left;
+	max-width: 80%;
+	margin: 10px auto;
+}
+
+.overlay-content h3, 
+.overlay-content h4 {
+	text-align: center;
+}
+
+.close-button {
+	position: absolute;
+	right: 20px;
+	top: 10px;
+	font-size: 24px;
+	cursor: pointer;
+}
+
+/* Tooltips */
+.tooltip-trigger {
+    position: relative;
+    cursor: help;
+}
+
+.tooltip-text {
+    visibility: hidden;
+    width: 200px; /* Fixed width */
+    background-color: #333;
+    color: #fff;
+    text-align: left;
+    border-radius: 6px;
+    padding: 8px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%); /* Center the tooltip */
+    margin-left: 0; /* Remove margin-left that might be causing issues */
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+    word-wrap: break-word; /* Ensure text wraps */
+    white-space: normal; /* Force normal text wrapping */
+    box-sizing: border-box; /* Include padding in width calculation */
+}
+
+/* Show the tooltip when hovering over the trigger element */
+.tooltip-trigger:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Special handling for input labels to position tooltips better */
+label.tooltip-trigger .tooltip-text {
+    left: 50%;
+    width: 220px; /* Slightly wider for label tooltips */
+}
+
+
+/* --- Buttons ---- */
+button {
+	background-color: #222;
+	color: #fff;
+	border: none;
+	border-radius: 3px;
+	padding: 6px 12px;
+	font-size: 14px;
+	cursor: pointer;
+	transition: all 0.2s ease;
+	margin: 5px;
+}
+
+button:hover {
+	background-color: #333;
+	color: #4ba3ff;
+}
+
+#stopButton:hover {
+	color: #ff4b4b;
+}
+
+
+button:active {
+	background-color: #1a1a1a;
+	transform: translateY(1px);
+}
+
+button.active {
+	color: #4ba3ff;
+	border: 1px solid #4ba3ff;
+	background-color: #1a1a1a;
+}
+
+
+/* Improved Dropdown Styling */
+select {
+	background-color: #222;
+	color: #fff;
+	border: 1px solid #444;
+	border-radius: 3px;
+	padding: 5px 8px;
+	font-size: 14px;
+	cursor: pointer;
+	appearance: none;
+	background-image: url("data:image/svg+xml;utf8,<svg fill='%23777' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+	background-repeat: no-repeat;
+	background-position: right 5px center;
+	padding-right: 25px;
+	transition: all 0.2s ease;
+}
+
+select:hover {
+	background-color: #333;
+	color: #4ba3ff;
+	border-color: #555;
+}
+
+select:focus {
+	outline: none;
+	border-color: #4ba3ff;
+	color: #fff;
+}
+
+/* Keyframe control styling */
+.keyframe-selection label {
+	position: relative;
+	padding: 5px 10px;
+	margin: 0 5px;
+	cursor: pointer;
+}
+
+
+/* -- isActive checkboxes --*/
+
+/* Active checkbox styling */
+.active-checkbox {
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+}
+
+.active-checkbox input[type="checkbox"] {
+    margin-right: 5px;
+}
+
+/* Control buttons for All Active/Disable All */
+.control-buttons {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.small-button {
+    padding: 3px 8px;
+    font-size: 12px;
+    background-color: #222;
+    color: #fff;
+    border: 1px solid #444;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.small-button:hover:not(:disabled) {
+    background-color: #333;
+    color: #4ba3ff;
+}
+
+.small-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Inactive control styling */
+.inactive-control {
+    background-color: #1a1a1a;
+    color: #777;
+    border-color: #333;
+}
+
+.inactive-control .control-content {
+    color: #777;
+}
+
+.inactive-control input,
+.inactive-control select,
+.inactive-control button:not(.active-checkbox input) {
+    color: #777;
+    border-color: #333;
+    background-color: #222;
+}
+
+.inactive-control .custom-color-button {
+    opacity: 0.5;
+}
+
+/* Ensure drag handle remains usable */
+.inactive-control .drag-handle {
+    opacity: 0.7;
+    cursor: grab;
+}
+
+/* -- /isActive checkboxes -- */
+
+/* Wide text inputs */
+.wide-text-input {
+	flex: 1;
+	min-width: 500px;
+}
+
+/* Add to styles.css */
+input:disabled,
+button:disabled,
+select:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: #1a1a1a !important;
+}
+
+/* Make the warning message stand out */
+.browser-warning {
+    color: #ff4444;
+    font-size: 14px;
+    margin-top: 10px;
+    font-weight: bold;
+    text-align: center;
+}
+
+#randomizeFilename {
+    padding: 2px 6px;
+    font-size: 16px;
+    min-width: auto;
+}
+
+.star-icon {
+    font-size: 24px;
+    cursor: pointer;
+    color: #4ba3ff;
+}
+
+.star-icon.filled {
+    /* Filled star using CSS */
+}
+
+.star-icon.modified {
+    color: #ff4b4b;
+}
+
+/* Title bar styles */
+#titleBar {
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-end;
+	max-width: 1280px;
+	margin: 0 auto;
+	padding: 10px 0;
+}
+
+#titleBar .title {
+	font-size: 24px;
+	font-weight: bold;
+	color: #ccc;
+}
+
+#titleBar .author {
+	font-size: 16px;
+	color: #aaa;
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
+	.wide-text-input {
+		min-width: 100%;
+		width: 100%;
+	}
+
+	/* Adjust grid and wave controls for smaller screens */
+	.grid-control, .wave-control {
+		flex-direction: column;
+		align-items: flex-start;
+		padding: 10px;
+		width: 100%;
+	}
+	
+	.control-content {
+		width: 100%;
+	}
+	
+	/* Make controls stack vertically on small screens */
+	.inline-controls {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+
+	.inline-controls-keyframe {
+		flex-direction: column;
+		align-items: flex-start;
+		margin-top: 20px;
+	}
+
+	
+	/* Make sure drag handles are properly positioned on mobile */
+	.drag-handle {
+		align-self: flex-start;
+		margin-bottom: 5px;
+	}
+	
+	/* Make phase value displays visible on small screens */
+	.wavePhaseValue {
+		display: inline-block;
+		min-width: 40px;
+	}
+	
+	/* Adjust sliders for smaller screens */
+	.slider-with-value {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+	
+	.slider-with-value label {
+		margin-bottom: 5px;
+		width: 100%;
+	}
+	
+	.slider-with-value input[type="range"] {
+		min-width: 200px;
+		width: 100%;
+		margin-bottom: 8px;
+	}
+	
+	.slider-with-value input[type="number"] {
+		width: 60px;
+	}
+
+	/* Make mini canvas smaller on mobile */
+	#miniCanvas { 
+		width: 240px; 
+		height: 135px; 
+	}
+	
+	#miniCanvasContainer {
+		top: 5px;
+		right: 5px;
+	}
+}
