@@ -8,11 +8,11 @@ An interactive web application for creating, animating, and sharing mesmerizing 
 
 ## Overview
 
-Moiré Exploré is a powerful WebGL-based creative coding tool that generates dynamic moiré patterns by overlapping grid layers with wave perturbations. The app features a comprehensive set of controls allowing users to create complex visual patterns, animate them using a keyframe system, and share their creations with others through an efficient state encoding URL system.
+Moiré Exploré is a powerful WebGL-based creative coding tool that generates dynamic moiré patterns by overlapping grid layers with wave perturbations. The app features a comprehensive set of controls allowing users to create complex visual patterns, animate them using a keyframe system, and share their creations with others through an efficient URL state encoding system.
 
 ## Features
 
-Here is your reformatted list with dashes instead of numbers:
+This project includes the following features:
 
 * **Moiré Pattern Generation**: Core grid-based pattern system with multiple overlapping grid layers
 * **Wave Perturbations**: Dynamic wave effects that distort grid patterns
@@ -35,7 +35,7 @@ Here is your reformatted list with dashes instead of numbers:
 * **Render to Disk**: Export custom PNG image sequence
 * **Pattern Gallery**: Showcase of example patterns with embedded previews
 * **Comprehensive Help System**: In-app documentation in addition to contextual tooltips
-* **Visibility Management**: Intelligently pauses animations when tab is not visible to save resources
+* **Visibility Management**: Intelligently pauses animations when tab or cnavas is not visible to save resources
 * **Randomization Tools**: One-click randomization of wave parameters
 * **Binary State Encoding**: Efficient format for saving/sharing complex states via URL
 * **Double-click Parameter Reset**: Quick reset of sliders
@@ -98,21 +98,17 @@ The solution is to recognize that certain parameters are cyclical and return to 
 
 ## Installation
 
-This application runs entirely in the browser and requires no server-side installation. To run locally:
+This application runs entirely in the browser and requires no server-side installation.
 
-1. Clone this repository
-2. Open `index.html` in a modern web browser
+**Recommended: Server Deployment** For best results, deploy to any web server (even a simple static file server). This ensures all features work correctly, including favorites, file operations, and browser security features.
+
+**Local Development (with limitations)** You can run locally by opening index.html in a modern web browser, but some features may not work due to browser security restrictions on file:// URLs. Consider using a local development server like Python's http.server or Node's http-server instead.
 
 For production deployment, simply copy all files to any web server.
 
 ## Browser Compatibility
 
-Moiré Exploré requires a browser with good WebGL support. Tested and confirmed working on:
-
-* Chrome 90+
-* Firefox 88+
-* Edge 90+
-* Safari 14+
+Moiré Exploré requires a browser with good WebGL support. Developed and tested with recent Chrome and Firefox, but should work on other modern browsers with WebGL support.
 
 ## Dependencies
 
@@ -121,6 +117,8 @@ Moiré Exploré requires a browser with good WebGL support. Tested and confirmed
 ## License
 
 This project is licensed under the [GNU General Public License v3.0](https://www.gnu.org/licenses/gpl-3.0.en.html) - see the [LICENSE](LICENSE) file for details.
+
+Commercial licensing available, contact author.
 
 ## Copyright
 
