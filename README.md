@@ -8,46 +8,61 @@ An interactive web application for creating, animating, and sharing mesmerizing 
 
 ## Overview
 
-Moiré Exploré is a powerful WebGL-based creative coding tool that generates dynamic moiré patterns by overlapping grid layers with wave perturbations. The app features a comprehensive set of controls allowing users to create complex visual patterns, animate them using a keyframe system, and share their creations with others through an efficient URL state encoding system.
+Moiré Exploré is a powerful WebGL-based creative tool that generates dynamic moiré patterns by overlapping grid layers with wave perturbations. The app features a comprehensive set of controls allowing users to create complex visual patterns, animate them using a simple keyframe system, and share their creations with others through an efficient URL state encoding system.
 
 ## Features
 
 This project includes the following features:
 
-* **Moiré Pattern Generation**: Core grid-based pattern system with multiple overlapping grid layers
-* **Wave Perturbations**: Dynamic wave effects that distort grid patterns
-* **Animation System**: Keyframe-based animation between two states (K1 and K2)
-* **Rendering Engine**: WebGL-based real-time rendering with optimized shader for smooth performance
-* **Fullscreen Mode**: High-resolution presentation mode with keyboard controls
-* **Grid Types**: Support for both rectangular and hexagonal grid patterns
-* **Rendering Style**: Option to render grids as lines or dots
-* **Wave Types**: Multiple wave types (transverse, longitude, amplitude, hue, saturation, lightness, rotation, phase shift)
-* **Color Control**: HSV color picker for detailed color customization
+#### Core Pattern Generation
 * **Blending Modes**: Multiple blending modes (additive, overlay, multiply, screen, etc.)
-* **Direction Controls**: Visual angle control for wave propagation
-* **Streaming Capability**: Red5 Pro integration to stream patterns live
-* **Mini Canvas**: Picture-in-picture view when scrolling away from main canvas
-* **Drag and Drop**: Reorder grids and waves via drag handles
-* **Random Generation**: Randomize buttons for quick wave exploration
-* **Tooltips**: Contextual help throughout the interface
-* **State Sharing**: Generates compact URL encoding for sharing created patterns
-* **Favorites System**: Save favorites to local storage, view and manage favorites on a gallery page
-* **Render to Disk**: Export custom PNG image sequence
-* **Pattern Gallery**: Showcase of example patterns with embedded previews
-* **Comprehensive Help System**: In-app documentation in addition to contextual tooltips
-* **Visibility Management**: Intelligently pauses animations when tab or cnavas is not visible to save resources
-* **Randomization Tools**: One-click randomization of wave parameters
-* **Binary State Encoding**: Efficient format for saving/sharing complex states via URL
-* **Double-click Parameter Reset**: Quick reset of sliders
-* **Responsive Design**: UI adapts to different screen sizes, with specific mobile optimizations, theoretically usable on your phone
+* **Grid Types**: Support for both rectangular and hexagonal grid patterns
+* **Moiré Pattern Generation**: Core grid-based pattern system with multiple overlapping grid layers
+* **Rendering Style**: Option to render grids as lines or dots
+* **Wave Perturbations**: Dynamic wave effects that distort grid patterns
+* **Wave Types**: Multiple wave types (transverse, longitude, amplitude, hue, saturation, lightness, rotation, phase shift)
+
+#### Animation & Rendering
+* **Animation System**: Keyframe-based animation between two states (K1 and K2)
+* **Fullscreen Mode**: High-resolution presentation mode with keyboard controls
 * **Multi-Canvas Rendering System**: Manages shared WebGL context across multiple canvases, saving resources and init time
-* **Parameter Autosave**: Automatic saving of settings to localStorage (local storage uses JSON)
-* **Grid/Wave Active Toggles**: Individual enable/disable controls for each grid and wave
+* **Rendering Engine**: WebGL-based real-time rendering with optimized shader for smooth performance
+* **Visibility Management**: Intelligently pauses animations when tab or canvas is not visible to save resources
+
+#### User Interface & Controls
+* **Color Control**: HSV color picker for detailed color customization
 * **Common Parameter Controls**: Common controls that affect all grids or waves at once
+* **Direction Controls**: Visual angle control for wave propagation
+* **Double-click Parameter Reset**: Quick reset of sliders
+* **Drag and Drop**: Reorder grids and waves via drag handles
+* **Grid/Wave Active Toggles**: Individual enable/disable controls for each grid and wave
+* **Mini Canvas**: Picture-in-picture view when scrolling away from main canvas
+* **Responsive Design**: UI adapts to different screen sizes, with specific mobile optimizations, theoretically usable on your phone
+* **Tooltips**: Contextual help throughout the interface
+
+#### Data Management & Sharing
+* **Binary State Encoding**: Efficient format for saving/sharing complex states via URL
+* **Favorites System**: Save favorites to local storage, view and manage favorites on a gallery page
+* **Parameter Autosave**: Automatic saving of settings to localStorage (local storage uses JSON)
+* **State Sharing**: Generates compact URL encoding for sharing created patterns
 * **State Versioning**: Backward compatibility for older state data formats
-* **Phase Modulation**: Complex interaction between waves via phase shift
-* **Offline Functionality**: Works without internet connection
 * **User Preferences System**: Remembers settings like tooltip visibility
+
+#### Content & Help
+* **Comprehensive Help System**: In-app documentation in addition to contextual tooltips
+* **Pattern Gallery**: Showcase of example patterns with embedded previews
+
+#### Export & Streaming
+* **Render to Disk**: Export custom PNG image sequence
+* **Streaming Capability**: Red5 Pro integration to stream patterns live
+
+#### Tools & Utilities
+* **Phase Modulation**: Complex interaction between waves via phase shift
+* **Random Generation**: Randomize buttons for quick wave exploration
+* **Randomization Tools**: One-click randomization of wave parameters
+
+#### Technical Features
+* **Offline Functionality**: Works without internet connection
 * **Self-contained Architecture**: No external dependencies for core functionality
 
 
