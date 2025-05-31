@@ -4,7 +4,7 @@ An interactive web application for creating, animating, and sharing mesmerizing 
 
 ![Moiré Exploré Screenshot](screenshots/screenshot1.png)
 
-**Live Demo:** [via GitHub Pages](https://nateroe.github.io/moire/)
+**Live Demo:** [via GitHub Pages](https://nateroe.github.io/moire/gallery.html)
 
 ## Overview
 
